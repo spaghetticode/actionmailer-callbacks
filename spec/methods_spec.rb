@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 describe ActionMailer::Callbacks::Methods do
   def callback_lists
     %w[before_create_callbacks after_create_callbacks before_deliver_callbacks after_deliver_callbacks]

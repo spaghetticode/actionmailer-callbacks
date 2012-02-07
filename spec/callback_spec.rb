@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 describe ActionMailer::Callbacks::Callback do
   describe 'a new callback' do
     let(:callback) { ActionMailer::Callbacks::Callback.new('name', :except => ['except', :notthis], :only => :yesthis) }

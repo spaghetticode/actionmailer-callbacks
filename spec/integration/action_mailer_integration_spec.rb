@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 describe MailerWithCallbacks do
   before { Flag.reset }
 
