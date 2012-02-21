@@ -10,7 +10,7 @@ This gem adds the following methods to ActionMailer, similar to ActionController
 
 ## Requirements
 
-This gem is tested only with ActionMailer 2.3.11, gem version dependencies are so strict because I needed it to work only on that specific version. Probably it would work with other versions too, as long as the creation/delivery interface of ActionMailer::Base class is still the same.
+This gem is tested only with ActionMailer 2.3.x, gem version dependencies are strict because I needed it to work only on those specific versions. Probably it would work with other versions too, as long as the creation/delivery interface of ActionMailer::Base class is still the same.
 
 ## Notes
 
