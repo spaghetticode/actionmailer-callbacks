@@ -1,4 +1,6 @@
-# ActionMailer Delivery Callbacks
+# ActionMailer Callbacks
+
+[![Build Status](https://secure.travis-ci.org/spaghetticode/actionmailer-callbacks.png)](http://travis-ci.org/spaghetticode/actionmailer-callbacks)
 
 This gem adds the following methods to ActionMailer, similar to ActionController before/after filters:
 
