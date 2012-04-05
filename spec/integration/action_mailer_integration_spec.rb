@@ -22,6 +22,16 @@ describe MailerWithCallbacks do
       it 'should run after_deliver callback' do
         Flag.after_deliver.should be_true
       end
+
+      it 'should run around_create method' do
+        Flag.create_before_block_call.should be_true
+        Flag.create_after_block_call.should be_true
+      end
+
+      it 'should run around_deliver method' do
+        Flag.deliver_before_block_call.should be_true
+        Flag.deliver_after_block_call.should be_true
+      end
     end
 
     context 'when the mailer method is included in only/except options' do
@@ -110,6 +120,16 @@ describe MailerWithCallbacks do
 
     it 'should not run after_deliver callback' do
       Flag.after_deliver.should_not be_true
+    end
+
+    it 'should run around_create method' do
+      Flag.create_before_block_call.should be_true
+      Flag.create_after_block_call.should be_true
+    end
+
+    it 'should not run around_deliver method' do
+      Flag.deliver_before_block_call.should_not be_true
+      Flag.deliver_after_block_call.should_not be_true
     end
   end
 end
