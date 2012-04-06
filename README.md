@@ -2,24 +2,38 @@
 
 [![Build Status](https://secure.travis-ci.org/spaghetticode/actionmailer-callbacks.png)](http://travis-ci.org/spaghetticode/actionmailer-callbacks)
 
-This gem adds the following methods to ActionMailer, similar to ActionController before/after filters:
+This gem adds the following methods to ActionMailer, similar to ActionController
+before/after filters:
 
 ```ruby
   before_create  :log_params,   :except => :test_email
   after_create   :alert_police, :only   => :robbery_alert
   before_deliver :apply_stamp,  :except => [:postage_prepaid, :test_email]
   after_deliver  :log_success
+  around_create  :benchmark
+  around_deliver :benckmark
 ```
 
 ## Requirements
 
-This gem is tested only with ActionMailer 2.3.x, gem version dependencies are strict because I needed it to work only on those specific versions. Probably it would work with other versions too, as long as the creation/delivery interface of ActionMailer::Base class is still the same.
+This gem is tested only with ActionMailer 2.3.x, gem version dependencies are
+strict because I needed it to work only on those specific versions. Probably it
+will work with other versions too, as long as the creation/delivery interface of
+ActionMailer::Base class is still the same.
 
 ## Notes
 
-*before_create* is executed even if the mail instantiation process fails due to some error.
-Since no mail has been created at this point, you can't do that much here, basically it's useful to inspect or log params.
-You can access the params anywhere via *@params* instance variable.
+*before_create* is executed even if the mail instantiation process fails due to
+some error.
+Since no mail has been created at this point, you can't do that much here,
+basically it's useful to inspect or log params. You can access the params
+anywhere via *@params* instance variable.
+
+*around_create* and *around_deliver* wrap the mail method execution (and all
+callbacks). You can use them for rescuing from errors or for benchmarking, for
+example.
+There can be only 1 around_create or around_deliver method for each email method,
+if there are more than 1 only the first will be executed.
 
 ## Example
 
@@ -27,6 +41,7 @@ You can access the params anywhere via *@params* instance variable.
   class UserMailer < ActionMailer::Base
     before_create :log_params
     after_deliver :log_success
+    around_create :rescue_from_errors
 
     def user_registration(user)
       # this is a regular ActionMailer email method
@@ -42,9 +57,23 @@ You can access the params anywhere via *@params* instance variable.
       MailerLogger.info "[DELIVERED] #{params_inspector}"
     end
 
+    def rescue_from_errors
+      begin
+        yield
+      rescue
+        puts 'An error occured!'
+      end
+    end
+
     def params_inspector
       @params.present? && @params.inject([]) do |lines, param|
-        message = param.is_a?(ActiveRecord::Base) ? "#{param.class.name.downcase}.id = #{param.id}" : param
+        message = begin
+          if param.is_a?(ActiveRecord::Base)
+            "#{param.class.name.downcase}.id = #{param.id}"
+          else
+            param
+          end
+        end
         lines << message
       end.join(', ')
     end
