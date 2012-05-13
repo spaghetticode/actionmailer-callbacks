@@ -1,14 +1,9 @@
-require 'rubygems'
-require 'active_support'
 require 'action_mailer'
 
-module ActionMailer
-  module Callbacks
-  end
-end
+lib_dir = File.expand_path('..', __FILE__)
+require File.join(lib_dir, 'actionmailer-callbacks/version')
+require File.join(lib_dir, 'actionmailer-callbacks/callback')
+require File.join(lib_dir, 'actionmailer-callbacks/callbackable')
+require File.join(lib_dir, 'actionmailer-callbacks/extensions')
 
-require 'actionmailer/callbacks/version'
-require 'actionmailer/callbacks/callback'
-require 'actionmailer/callbacks/methods'
-
-ActionMailer::Base.send :include, ActionMailer::Callbacks::Methods
+ActionMailer::Base.extend ActionMailer::Callbacks::Extensions
