@@ -6,8 +6,8 @@ module ActionMailer
 
       def initialize(callback_name, opts={})
         @name   = callback_name
-        @only   = Array.wrap(opts[:only]).map {|e| e.to_s}
-        @except = Array.wrap(opts[:except]).map {|e| e.to_s}
+        @only   = Array.wrap(opts[:only]).map(&:to_s)
+        @except = Array.wrap(opts[:except]).map(&:to_s)
       end
 
       def should_run?(mailer_method)
