@@ -11,8 +11,8 @@ Feature: before_create callback
     before/after/around create filters: for example in order
     to run a callback only for the "test" action you should
     specify one of the following:
-      before_create :test, only: :test
-      before_create :test, only: [:test]
+      before_create :test_callback, only: :test
+      before_create :test_callback, only: [:test]
 
 Scenario: successful callback calling
   Given the following mailer class with a before_create callback:
@@ -49,9 +49,6 @@ Scenario: successful callback calling
   Scenario: callback skipped because not included in "only" directive
     Given the following mailer class with a before_create callback:
       """
-      # simulating the loading of the gem
-      require File.expand_path('../lib/actionmailer-callbacks', __FILE__)
-
       class TestMailer < ::ActionMailer::Base
         before_create :log_args, only: :only_method
 
