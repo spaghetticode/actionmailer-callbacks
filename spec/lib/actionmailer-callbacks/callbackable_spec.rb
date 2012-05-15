@@ -11,6 +11,25 @@ module ActionMailer
       before {subject.reset_callbacks}
 
       context '#initialize' do
+        it 'checks for the around_create callback' do
+          sample_class.should_receive(:around_create_callback)
+          sample_class.new(:mailer_method)
+        end
+
+        it 'does not run the around_create callback if present but should not run' do
+          callback.stub(run?: false)
+          sample_class.stub(around_create_callback: callback)
+          sample_class.any_instance.should_not_receive(:callback_method)
+          sample_class.new(:mailer_method)
+        end
+
+        it 'runs the around_create callback if present and should run' do
+          callback.stub(run?: true)
+          sample_class.stub(around_create_callback: callback)
+          sample_class.any_instance.should_receive(:callback_method)
+          sample_class.new(:mailer_method)
+        end
+
         it 'cycles on before_create_callbacks' do
           sample_class.should_receive(:before_create_callbacks).and_return([])
           sample_class.new(:mailer_method)

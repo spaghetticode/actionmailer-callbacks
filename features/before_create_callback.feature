@@ -14,7 +14,7 @@ Feature: before_create callback
       before_create :test_callback, only: :test
       before_create :test_callback, only: [:test]
 
-Scenario: successful callback calling
+Scenario: successful before_create callback calling
   Given the following mailer class with a before_create callback:
     """
     class TestMailer < ::ActionMailer::Base
@@ -41,12 +41,12 @@ Scenario: successful callback calling
     """
   When I run the code "TestMailer.test('recipient@test.com').deliver"
   Then an email should have been sent
-  And the logger for the class "TestMailer" should contain
+  And the logger for the class "TestMailer" should contain:
     """
     Test was called with "recipient@test.com"
     """
 
-  Scenario: callback skipped because not included in "only" directive
+  Scenario: before_create callback skipped because not included in "only" directive
     Given the following mailer class with a before_create callback:
       """
       class TestMailer < ::ActionMailer::Base

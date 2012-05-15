@@ -13,7 +13,7 @@ Feature: around_create callback
     specify one of the following:
       around_create :test_callback, only: :test
       around_create :test_callback, only: [:test]
-
+@focus
 Scenario: successful around_create calling
   Given the following mailer class with an around_create callback:
     """
@@ -34,21 +34,26 @@ Scenario: successful around_create calling
 
       private
 
-      def log_args(args)
-        self.class.logger << "Test was called with #{args.inspect}"
+      def log_args(*args)
+        self.class.logger << "Test email now being called"
+        yield
+        self.class.logger << "Test email was successfully created"
       end
     end
     """
-  When I run the code "TestMailer.test('recipient@test.com').create"
+  When I run the code "TestMailer.test('recipient@test.com')"
   Then an email should have been created
-  And the logger for the class "TestMailer" should contain
+  And the logger for the class "TestMailer" should contain:
     """
-    Test was called with "recipient@test.com"
-    Test was called with "recipient@test.com"
+    Test email now being called
+    """
+  And the logger for the class "TestMailer" should contain:
+    """
+    Test email was successfully created
     """
 
-  Scenario: callback skipped because not included in "only" directive
-    Given the following mailer class with an after_create callback:
+  Scenario: around_create callback skipped because not included in "only" directive
+    Given the following mailer class with an around_create callback:
       """
       class TestMailer < ::ActionMailer::Base
         around_create :log_args, only: :only_method
@@ -68,10 +73,12 @@ Scenario: successful around_create calling
         private
 
         def log_args(*args)
-          self.class.logger << "Test was called with #{args.inspect}"
+          self.class.logger << "Test email now being called"
+          yield
+          self.class.logger << "Test email was successfully created"
         end
       end
       """
-    When I run the code "TestMailer.test('recipient@test.com').create"
+    When I run the code "TestMailer.test('recipient@test.com')"
     Then an email should have been created
     And the logger for the class "TestMailer" should be empty
