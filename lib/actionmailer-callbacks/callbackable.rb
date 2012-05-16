@@ -25,7 +25,7 @@ module ActionMailer
         result = nil
         around_create_callback = self.class.around_create_callback
         if around_create_callback and around_create_callback.run?(method)
-          send self.class.around_create_callback.name do
+          send self.class.around_create_callback.name, *args do
             self.class.before_create_callbacks.each do |callback|
               send callback.name, *args if callback.run?(method)
             end

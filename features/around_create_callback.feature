@@ -35,7 +35,7 @@ Scenario: successful around_create calling
       private
 
       def log_args(*args)
-        self.class.logger << "Test email now being called"
+        self.class.logger << "Test email now being called with #{args.flatten.inspect}"
         yield
         self.class.logger << "Test email was successfully created"
       end
@@ -45,7 +45,7 @@ Scenario: successful around_create calling
   Then an email should have been created
   And the logger for the class "TestMailer" should contain:
     """
-    Test email now being called
+    Test email now being called with ["recipient@test.com"]
     """
   And the logger for the class "TestMailer" should contain:
     """
