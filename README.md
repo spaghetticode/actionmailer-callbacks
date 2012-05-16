@@ -19,7 +19,8 @@ before/after filters:
 This gem is tested only with ActionMailer 2.3.x, gem version dependencies are
 strict because I needed it to work only on those specific versions. Probably it
 will work with other versions too, as long as the creation/delivery interface of
-ActionMailer::Base class is still the same.
+ActionMailer::Base class is still the same. Some features of this version are
+available also on the action mailer v3.x version. Checkout the 1.0 release.
 
 ## Notes
 
