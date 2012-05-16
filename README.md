@@ -2,46 +2,53 @@
 
 [![Build Status](https://secure.travis-ci.org/spaghetticode/actionmailer-callbacks.png)](http://travis-ci.org/spaghetticode/actionmailer-callbacks)
 
-This gem adds the following methods to ActionMailer, similar to ActionController
-before/after filters:
+This gem adds before_create and around_create to ActionMailer::Base to make it
+work similarly to ActionController before/around filters and ActiveRecord::Base
+callbacks:
 
 ```ruby
-  before_create  :log_params,   :except => :test_email
-  after_create   :alert_police, :only   => :robbery_alert
-  before_deliver :apply_stamp,  :except => [:postage_prepaid, :test_email]
-  after_deliver  :log_success
-  around_create  :benchmark
-  around_deliver :benckmark
+  before_create  :log_params, except: :test_email
+  around_create  :benchmark,  only:   :test_email
 ```
+
+*except* and *only* options are optional and has same functionality as in
+ActionController.
+
 
 ## Requirements
 
-This gem is tested only with ActionMailer 2.3.x, gem version dependencies are
-strict because I needed it to work only on those specific versions. Probably it
-will work with other versions too, as long as the creation/delivery interface of
-ActionMailer::Base class is still the same. Some features of this version are
-available also on the action mailer v3.x version. Checkout the 1.0 release.
+The master branch now works only with Actionmailer 3.x, if you need to add
+callbacks to older versions please refer to the 0.x release.
+
+
+## Installation
+
+Add the gem to the Gemfile:
+
+```ruby
+  gem 'actionmailer-callbacks'
+```
+
+And then run ```bundle```
+
+>>>>>>> actionmailer3
 
 ## Notes
 
-*before_create* is executed even if the mail instantiation process fails due to
-some error.
-Since no mail has been created at this point, you can't do that much here,
-basically it's useful to inspect or log params. You can access the params
-anywhere via *@params* instance variable.
+If you need something like before/after deliver callbacks ActionMailer 3.x comes
+ready for that: you can use an *observer* or an *instrumentation* for that.
 
-*around_create* and *around_deliver* wrap the mail method execution (and all
-callbacks). You can use them for rescuing from errors or for benchmarking, for
-example.
-There can be only 1 around_create or around_deliver method for each email method,
-if there are more than 1 only the first will be executed.
+*around_create* wrap the mail method execution (and all before_create callbacks).
+You can use them for rescuing from errors or for benchmarking, for example.
+There can be only one *around_create* method for each email method, if you
+register more than one only the first will be executed.
+
 
 ## Example
 
 ```ruby
   class UserMailer < ActionMailer::Base
     before_create :log_params
-    after_deliver :log_success
     around_create :rescue_from_errors
 
     def user_registration(user)
@@ -50,12 +57,8 @@ if there are more than 1 only the first will be executed.
 
     private
 
-    def log_params
-      MailerLogger.info "[CREATE] #{params_inspector}"
-    end
-
-    def log_success
-      MailerLogger.info "[DELIVERED] #{params_inspector}"
+    def log_params(args)
+      MailerLogger.info "[CREATE] #{args.inspect}"
     end
 
     def rescue_from_errors
@@ -65,18 +68,15 @@ if there are more than 1 only the first will be executed.
         puts 'An error occured!'
       end
     end
-
-    def params_inspector
-      @params.present? && @params.inject([]) do |lines, param|
-        message = begin
-          if param.is_a?(ActiveRecord::Base)
-            "#{param.class.name.downcase}.id = #{param.id}"
-          else
-            param
-          end
-        end
-        lines << message
-      end.join(', ')
-    end
   end
 ```
+
+
+## Contributing
+
+1. Fork it
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Add your feature tests to the rspec/cucumber test suite
+4. Commit your changes (`git commit -am 'Added some feature'`)
+5. Push to the branch (`git push origin my-new-feature`)
+6. Create new Pull Request
