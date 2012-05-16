@@ -2,7 +2,7 @@
 
 [![Build Status](https://secure.travis-ci.org/spaghetticode/actionmailer-callbacks.png)](http://travis-ci.org/spaghetticode/actionmailer-callbacks)
 
-This gem adds before_create and around_create to ActionMailer::Base to make it
+This gem adds *before_create* and *around_create* to ActionMailer::Base to make it
 work similarly to ActionController before/around filters and ActiveRecord::Base
 callbacks:
 
@@ -31,14 +31,13 @@ Add the gem to the Gemfile:
 
 And then run ```bundle```
 
->>>>>>> actionmailer3
 
 ## Notes
 
 If you need something like before/after deliver callbacks ActionMailer 3.x comes
 ready for that: you can use an *observer* or an *instrumentation* for that.
 
-*around_create* wrap the mail method execution (and all before_create callbacks).
+*around_create* wraps the mail method execution (and all before_create callbacks).
 You can use them for rescuing from errors or for benchmarking, for example.
 There can be only one *around_create* method for each email method, if you
 register more than one only the first will be executed.
