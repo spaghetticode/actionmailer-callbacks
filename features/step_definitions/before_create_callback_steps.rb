@@ -1,6 +1,5 @@
 Given /^the following mailer class with an? (around_create callback|before_create callback):$/ do |_, class_definition|
   context_module.class_eval class_definition
-  context_module.class_eval "TestMailer.instance_eval {@logger = []}"
 end
 
 When /^I run the code "(.*?)"$/ do |code|
