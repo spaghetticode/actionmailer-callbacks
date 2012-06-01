@@ -1,18 +1,21 @@
 Feature: around_create callback
   As an actionmailer gem user
-  I want to be able to use the around_create callback
-  So that I can wrap the email creation process with my callback
+  I want to be able to use the *around_create* callback
+  so that I can wrap the email creation process with my callback.
 
-    The "around_create" callback allows to wrap the email creation
+    The *around_create* callback allows to wrap the email creation
     process around another method definition.
+
     The macro accepts the callback name as first arguments and an
-    optional hash with "only" and/or "except" keys that are
+    optional hash with *only* and/or *except* keys that are
     functionally equivalent to the ones of ActionController
     before/after/around create filters: for example in order
     to run a callback only for the "test" action you should
     specify one of the following:
+
       around_create :test_callback, only: :test
       around_create :test_callback, only: [:test]
+
 @focus
 Scenario: successful around_create calling
   Given the following mailer class with an around_create callback:
@@ -35,7 +38,8 @@ Scenario: successful around_create calling
       private
 
       def log_args(*args)
-        self.class.logger << "Test email now being called with #{args.flatten.inspect}"
+        params = args.flatten.inspect
+        self.class.logger << "Test email now called with #{params}"
         yield
         self.class.logger << "Test email was successfully created"
       end

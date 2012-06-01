@@ -1,16 +1,17 @@
 Feature: before_create callback
   As an actionmailer gem user
   I want to be able to use the before_create callback
-  So that I can to execute code before creating an email
+  so that I can to execute code before creating an email
 
-    The "before_create" callback allows to execute a callback
+    The *before_create* callback allows to execute a callback
     before the email creation process. The macro accepts
     the callback name as first arguments and an
-    optional hash with "only" and/or "except" keys that are
+    optional hash with *only* and/or *except* keys that are
     functionally equivalent to the ones of ActionController
     before/after/around create filters: for example in order
-    to run a callback only for the "test" action you should
+    to run a callback only for the *test* action you should
     specify one of the following:
+
       before_create :test_callback, only: :test
       before_create :test_callback, only: [:test]
 
