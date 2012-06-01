@@ -32,6 +32,12 @@ Add the gem to the Gemfile:
 And then run ```bundle```
 
 
+## Documentation
+
+You can find some more documentation on the workings of the gem on relish:
+https://www.relishapp.com/spaghetticode/actionmailer-callbacks/docs
+
+
 ## Notes
 
 If you need something like before/after deliver callbacks ActionMailer 3.x comes
