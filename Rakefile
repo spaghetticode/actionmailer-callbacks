@@ -11,4 +11,27 @@ task :spec do
   end
 end
 
-task :default => :spec
+desc 'Run cucumber features'
+task :cucumber do
+  require 'cucumber/rake/task'
+
+  Cucumber::Rake::Task.new do |t|
+    t.rcov = false
+  end
+end
+
+desc 'Runs tests on Travis CI'
+task :travis do
+  ["rspec spec", "rake cucumber"].each do |cmd|
+    puts "Starting to run #{cmd}..."
+    system("export DISPLAY=:99.0 && bundle exec #{cmd}")
+    raise "#{cmd} failed!" unless $?.exitstatus == 0
+  end
+end
+
+if ENV['TRAVIS']
+  task :default => :travis
+else
+  task :default => :spec
+end
+
