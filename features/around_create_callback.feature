@@ -39,7 +39,7 @@ Scenario: successful around_create calling
 
       def log_args(*args)
         params = args.flatten.inspect
-        self.class.logger << "Test email now called with #{params}"
+        self.class.logger << "Test email now being called with #{params}"
         yield
         self.class.logger << "Test email was successfully created"
       end
