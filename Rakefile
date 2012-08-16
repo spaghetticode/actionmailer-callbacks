@@ -32,6 +32,6 @@ end
 if ENV['TRAVIS']
   task :default => :travis
 else
-  task :default => :spec
+  task :default => [:spec, :cucumber]
 end
 
