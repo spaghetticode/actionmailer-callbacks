@@ -13,7 +13,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = 'actionmailer-callbacks'
   gem.require_paths = ["lib"]
-  gem.version       = Actionmailer::Callbacks::VERSION
+  gem.version       = ActionMailer::Callbacks::VERSION
 
   gem.add_dependency 'actionmailer', '~> 3.0'
   gem.add_dependency 'activesupport'

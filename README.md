@@ -19,7 +19,7 @@ Callbacks functionality is implemented using the ActiveSupport::Callbacks module
 
 ## Requirements
 
-The master branch now works only with Actionmailer 3.x, if you need to add
+The master branch now works only with ActionMailer 3.x, if you need to add
 callbacks to older versions please refer to the 0.x release.
 
 

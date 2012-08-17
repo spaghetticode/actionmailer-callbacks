@@ -1,13 +1,13 @@
 require 'action_mailer'
 
-# module Actionmailer
-#   module Callbacks
-#   end
-# end
+module ActionMailer
+  module Callbacks
+    autoload :Callbackable, 'actionmailer-callbacks/callbackable'
+    autoload :Extensions,   'actionmailer-callbacks/extensions'
+  end
+end
 
-lib_dir = File.expand_path('..', __FILE__)
-require File.join(lib_dir, 'actionmailer-callbacks/version')
-require File.join(lib_dir, 'actionmailer-callbacks/callbackable')
-require File.join(lib_dir, 'actionmailer-callbacks/extensions')
+require File.join(File.expand_path('..', __FILE__), 'actionmailer-callbacks/version')
+
 
 ActionMailer::Base.extend ActionMailer::Callbacks::Extensions
