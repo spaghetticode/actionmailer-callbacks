@@ -1,41 +1,20 @@
+require 'active_support/concern'
+require 'active_support/callbacks'
+
 module ActionMailer
   module Callbacks
     module Callbackable
       extend ActiveSupport::Concern
+      include ActiveSupport::Callbacks
 
-      module ClassMethods
-        def before_create_callbacks
-          @before_create_callbacks ||= Set.new
-        end
-
-        def add_before_create_callback(callback)
-          @before_create_callbacks << callback
-        end
-
-        def around_create_callback
-          @around_create_callback
-        end
-
-        def reset_callbacks
-          @before_create_callbacks = Set.new
-        end
+      included do
+        attr_internal_accessor :args
+        define_callbacks :initialize
       end
 
-      def initialize(method, *args)
-        result = nil
-        around_create_callback = self.class.around_create_callback
-        if around_create_callback and around_create_callback.run?(method)
-          send self.class.around_create_callback.name, *args do
-            self.class.before_create_callbacks.each do |callback|
-              send callback.name, *args if callback.run?(method)
-            end
-            result = super
-          end
-          result
-        else
-          self.class.before_create_callbacks.each do |callback|
-            send callback.name, *args if callback.run?(method)
-          end
+      def initialize(*args)
+        self.args = args
+        run_callbacks :initialize do
           super
         end
       end
