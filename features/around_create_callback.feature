@@ -8,7 +8,7 @@ Feature: around_create callback
 
     The macro accepts the callback name as first arguments and an
     optional hash with *only* and/or *except* keys that are
-    functionally equivalent to the ones of ActionController
+    functionally equivalent to the ones of ApplicationController
     before/after/around create filters: for example in order
     to run a callback only for the "test" action you should
     specify one of the following:
@@ -16,7 +16,7 @@ Feature: around_create callback
       around_create :test_callback, only: :test
       around_create :test_callback, only: [:test]
 
-@focus
+
 Scenario: successful around_create calling
   Given the following mailer class with an around_create callback:
     """
@@ -37,8 +37,8 @@ Scenario: successful around_create calling
 
       private
 
-      def log_args(*args)
-        params = args.flatten.inspect
+      def log_args
+        params = args.flatten.to_sentence
         self.class.logger << "Test email now being called with #{params}"
         yield
         self.class.logger << "Test email was successfully created"
@@ -49,18 +49,51 @@ Scenario: successful around_create calling
   Then an email should have been created
   And the logger for the class "TestMailer" should contain:
     """
-    Test email now being called with ["recipient@test.com"]
+    Test email now being called with test and recipient@test.com
     """
   And the logger for the class "TestMailer" should contain:
     """
     Test email was successfully created
     """
 
+
   Scenario: around_create callback skipped because not included in "only" directive
     Given the following mailer class with an around_create callback:
       """
       class TestMailer < ::ActionMailer::Base
         around_create :log_args, only: :only_method
+
+        def self.logger
+          @logger ||= Array.new
+        end
+
+        def test(recipient)
+          mail(
+            to: recipient,
+            from: 'sender@test.com',
+            subject: 'Test Email'
+          )
+        end
+
+        private
+
+        def log_args(*args)
+          self.class.logger << "Test email now being called"
+          yield
+          self.class.logger << "Test email was successfully created"
+        end
+      end
+      """
+    When I run the code "TestMailer.test('recipient@test.com')"
+    Then an email should have been created
+    And the logger for the class "TestMailer" should be empty
+
+
+  Scenario: around_create callback skipped because included in "except" directive
+    Given the following mailer class with an around_create callback:
+      """
+      class TestMailer < ::ActionMailer::Base
+        around_create :log_args, except: :test
 
         def self.logger
           @logger ||= Array.new
