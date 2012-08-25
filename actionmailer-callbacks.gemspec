@@ -6,7 +6,7 @@ Gem::Specification.new do |gem|
   gem.email         = ['andrea@spaghetticode.it']
   gem.description   = %q{adds before_create, around_create callbacks to action mailer 3}
   gem.summary       = %q{adds before_create, around_create callbacks to action mailer 3}
-  gem.homepage      = 'http://github.com/spaghetticode/actionmailer-callbacks'
+  gem.homepage      = 'https://github.com/spaghetticode/actionmailer-callbacks'
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
